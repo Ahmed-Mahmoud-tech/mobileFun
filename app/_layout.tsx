@@ -1,39 +1,49 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
+import { Stack } from "expo-router"
+import { StatusBar } from "expo-status-bar"
+import "react-native-reanimated"
+import { PaperProvider } from "react-native-paper"
+import Wrapper from "@/components/Wrapper/Wrapper"
+import { useFonts } from "expo-font"
+import * as SplashScreen from "expo-splash-screen"
+import { useEffect } from "react"
+import { store } from "@/store/store"
+import { Provider } from "react-redux"
+import { ScrollView, Text } from "react-native"
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  // Load fonts
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+  })
 
+  // Hide splash screen once fonts are loaded
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync()
     }
-  }, [loaded]);
+  }, [loaded])
 
   if (!loaded) {
-    return null;
+    return null
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+    <PaperProvider>
+      <Provider store={store}>
+        <Wrapper>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </Wrapper>
+      </Provider>
+    </PaperProvider>
+  )
 }
