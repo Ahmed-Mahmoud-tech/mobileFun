@@ -1,6 +1,12 @@
 import React, { useState } from "react"
-import { StyleSheet, View, Text } from "react-native"
-import { TextInput, Button, useTheme } from "react-native-paper"
+import { StyleSheet, View } from "react-native"
+import {
+  TextInput,
+  Button,
+  useTheme,
+  Text,
+  Paragraph,
+} from "react-native-paper"
 import { useRouter } from "expo-router"
 
 const VerifyEmailScreen = () => {
@@ -8,6 +14,9 @@ const VerifyEmailScreen = () => {
   const [emailCode, setEmailCode] = useState("")
   const [resendTimer, setResendTimer] = useState(30)
   const [loading, setLoading] = useState(false)
+
+  const theme = useTheme()
+  const styles = themeStyles(theme)
 
   // Start countdown for resend timer
   React.useEffect(() => {
@@ -42,9 +51,9 @@ const VerifyEmailScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Verify Your Email</Text>
-      <Text style={styles.subtitle}>
+      <Paragraph style={styles.subtitle}>
         Please enter the 6-digit code sent to your email.
-      </Text>
+      </Paragraph>
 
       {/* Email Code Input */}
       <TextInput
@@ -82,43 +91,44 @@ const VerifyEmailScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-    backgroundColor: "#f5f5f5",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 20,
-    color: "#666",
-  },
-  input: {
-    marginBottom: 20,
-  },
-  button: {
-    marginTop: 10,
-  },
-  resendText: {
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 14,
-  },
-  resendLink: {
-    color: "#007BFF",
-    textDecorationLine: "underline",
-  },
-  resendDisabled: {
-    color: "#999",
-  },
-})
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      padding: 20,
+      backgroundColor: theme.colors.elevation.level3,
+    },
+    title: {
+      fontSize: 24,
+      marginBottom: 10,
+      textAlign: "center",
+    },
+    subtitle: {
+      fontSize: 16,
+      textAlign: "center",
+      marginBottom: 20,
+      color: theme.colors.secondary,
+    },
+    input: {
+      marginBottom: 20,
+    },
+    button: {
+      marginTop: 10,
+    },
+    resendText: {
+      textAlign: "center",
+      marginTop: 20,
+      fontSize: 14,
+    },
+    resendLink: {
+      color: theme.colors.secondary,
+      textDecorationLine: "underline",
+    },
+    resendDisabled: {
+      color: theme.colors.onSurfaceVariant,
+    },
+  })
+}
 
 export default VerifyEmailScreen

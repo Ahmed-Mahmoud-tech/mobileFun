@@ -1,9 +1,11 @@
 import React, { useState } from "react"
-import { StyleSheet, View, Text } from "react-native"
-import { TextInput, Button } from "react-native-paper"
+import { StyleSheet, View } from "react-native"
+import { TextInput, Button, useTheme, Text } from "react-native-paper"
 import { useRouter } from "expo-router"
 
 const ForgotPasswordScreen = () => {
+  const theme = useTheme()
+  const styles = themeStyles(theme)
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
@@ -65,44 +67,44 @@ const ForgotPasswordScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-    backgroundColor: "#f5f5f5",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 20,
-    color: "#666",
-  },
-  input: {
-    marginBottom: 20,
-  },
-  button: {
-    marginTop: 10,
-  },
-  message: {
-    marginTop: 20,
-    textAlign: "center",
-    fontSize: 14,
-    color: "#007BFF",
-  },
-  backLink: {
-    marginTop: 20,
-    textAlign: "center",
-    fontSize: 14,
-    color: "#007BFF",
-    textDecorationLine: "underline",
-  },
-})
-
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      padding: 20,
+      backgroundColor: theme.colors.elevation.level3,
+    },
+    title: {
+      fontSize: 24,
+      textAlign: "center",
+      marginBottom: 10,
+    },
+    subtitle: {
+      fontSize: 16,
+      textAlign: "center",
+      marginBottom: 20,
+      color: theme.colors.onBackground,
+    },
+    input: {
+      marginBottom: 20,
+    },
+    button: {
+      marginTop: 10,
+    },
+    message: {
+      marginTop: 20,
+      textAlign: "center",
+      fontSize: 14,
+      color: theme.colors.error,
+    },
+    backLink: {
+      marginTop: 20,
+      textAlign: "center",
+      fontSize: 14,
+      color: theme.colors.onSecondaryContainer,
+      // textDecorationLine: "underline",
+    },
+  })
+}
 export default ForgotPasswordScreen

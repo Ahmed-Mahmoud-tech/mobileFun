@@ -8,6 +8,7 @@ import {
   List,
   IconButton,
   Divider,
+  useTheme,
 } from "react-native-paper"
 import DateTimePicker from "@react-native-community/datetimepicker"
 
@@ -29,6 +30,9 @@ const OwnerProfile = () => {
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [newPlaceName, setNewPlaceName] = useState("")
   const [editingPlace, setEditingPlace] = useState(null)
+
+  const theme = useTheme()
+  const styles = themeStyles(theme)
 
   const handleAddOrSavePlace = () => {
     if (!newPlaceName.trim()) {
@@ -264,24 +268,25 @@ const OwnerProfile = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: "#f5f5f5",
-  },
-  card: {
-    marginBottom: 16,
-  },
-  input: {
-    marginBottom: 16,
-  },
-  button: {
-    marginTop: 8,
-  },
-  placeActions: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-})
-
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      padding: 16,
+      backgroundColor: theme.colors.elevation.level3,
+    },
+    card: {
+      marginBottom: 16,
+    },
+    input: {
+      marginBottom: 16,
+    },
+    button: {
+      marginTop: 8,
+    },
+    placeActions: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+  })
+}
 export default OwnerProfile

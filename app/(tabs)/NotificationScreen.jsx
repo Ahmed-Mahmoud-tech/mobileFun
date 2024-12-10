@@ -1,3 +1,4 @@
+import Dropdown from "@/components/Dropdown/Dropdown"
 import React, { useState } from "react"
 import { StyleSheet, ScrollView, View, Alert } from "react-native"
 import {
@@ -10,6 +11,7 @@ import {
   Divider,
   SegmentedButtons,
   Text,
+  useTheme,
 } from "react-native-paper"
 
 const NotificationPage = () => {
@@ -21,6 +23,8 @@ const NotificationPage = () => {
     playersPurchases: false,
     checkout: false,
   })
+  const theme = useTheme()
+  const styles = themeStyles(theme)
 
   const [filters, setFilters] = useState({
     notificationType: "all",
@@ -90,6 +94,10 @@ const NotificationPage = () => {
     return matchesType && matchesEmail && matchesDate
   })
 
+  const notificationType = (value) => {
+    handleFilterChange("notificationType", value)
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Notification Preferences */}
@@ -114,21 +122,18 @@ const NotificationPage = () => {
         <Card.Title title="Filters" />
         <Divider />
         <Card.Content>
-          {/* Notification Type Filter */}
-          <SegmentedButtons
-            value={filters.notificationType}
-            onValueChange={(value) =>
-              handleFilterChange("notificationType", value)
-            }
-            buttons={[
-              { value: "all", label: "All" },
-              { value: "employeeRequest", label: "Employee Request" },
-              { value: "reservation", label: "Reservation" },
-              { value: "play", label: "Play" },
-              { value: "purchasesItems", label: "Purchases Items" },
-              { value: "playersPurchases", label: "Players Purchases" },
-              { value: "checkout", label: "Checkout" },
-            ]}
+          <Dropdown
+            data={{
+              all: "All",
+              employeeRequest: "Employee Request",
+              reservation: "Reservation",
+              play: "Play",
+              purchasesItems: "Purchases Items",
+              playersPurchases: "Players Purchases",
+              checkout: "Checkout",
+            }}
+            onSelect={notificationType} // Pass handleSelect function to handle selection
+            placeholder="Choose a Game"
           />
 
           {/* Date Filter */}
@@ -158,72 +163,79 @@ const NotificationPage = () => {
         <Card.Content>
           {filteredNotifications.length > 0 ? (
             filteredNotifications.map((notification) => (
-              <List.Item
-                key={notification.id}
-                title={notification.title}
-                description={`${notification.body}\nBy: ${notification.author}\nAt: ${notification.time}`}
-                right={(props) =>
-                  notification.actions.accept || notification.actions.reject ? (
-                    <View style={styles.actions}>
-                      {notification.actions.accept && (
-                        <Button
-                          mode="contained"
-                          onPress={() =>
-                            handleNotificationAction(notification.id, "accept")
-                          }
-                          style={styles.actionButton}
-                        >
-                          Accept
-                        </Button>
-                      )}
-                      {notification.actions.reject && (
-                        <Button
-                          mode="outlined"
-                          onPress={() =>
-                            handleNotificationAction(notification.id, "reject")
-                          }
-                          style={styles.actionButton}
-                        >
-                          Reject
-                        </Button>
-                      )}
-                    </View>
-                  ) : null
-                }
-              />
+              <View key={notification.id}>
+                <List.Item
+                  title={notification.title}
+                  description={`${notification.body}\nBy: ${notification.author}\nAt: ${notification.time}`}
+                />
+                {notification.actions.accept || notification.actions.reject ? (
+                  <View style={styles.actions}>
+                    {notification.actions.accept && (
+                      <Button
+                        mode="contained"
+                        onPress={() =>
+                          handleNotificationAction(notification.id, "accept")
+                        }
+                        style={styles.actionButton}
+                      >
+                        Accept
+                      </Button>
+                    )}
+                    {notification.actions.reject && (
+                      <Button
+                        mode="outlined"
+                        onPress={() =>
+                          handleNotificationAction(notification.id, "reject")
+                        }
+                        style={styles.actionButton}
+                      >
+                        Reject
+                      </Button>
+                    )}
+                  </View>
+                ) : null}
+                <Divider style={styles.spaceTop} />
+              </View>
             ))
           ) : (
-            <Text>No notifications found.</Text>
+            <Text style={styles.notFound}>No notifications found.</Text>
           )}
         </Card.Content>
       </Card>
     </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: "#f5f5f5",
-  },
-  card: {
-    marginBottom: 16,
-  },
-  input: {
-    marginBottom: 16,
-  },
-  checkboxRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  actions: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  actionButton: {
-    marginLeft: 8,
-  },
-})
-
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      padding: 16,
+      backgroundColor: theme.colors.elevation.level3,
+    },
+    card: {
+      marginBottom: 16,
+    },
+    input: {
+      marginBottom: 16,
+    },
+    checkboxRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 8,
+    },
+    actions: {
+      flexDirection: "row",
+      alignItems: "center",
+      width: "100%",
+    },
+    actionButton: {
+      marginLeft: 8,
+    },
+    notFound: {
+      marginTop: 10,
+    },
+    spaceTop: {
+      marginTop: 10,
+    },
+  })
+}
 export default NotificationPage

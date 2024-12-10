@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { StyleSheet, View, FlatList, Alert, Text } from "react-native"
+import { StyleSheet, View, FlatList, Alert } from "react-native"
 import {
   TextInput,
   Button,
@@ -7,10 +7,15 @@ import {
   Portal,
   Card,
   FAB,
+  useTheme,
+  Text,
 } from "react-native-paper"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
+import Dropdown from "@/components/Dropdown/Dropdown"
 
 const ReservationScreen = () => {
+  const theme = useTheme()
+  const styles = themeStyles(theme)
   const [reservations, setReservations] = useState([])
   const [filters, setFilters] = useState({
     playersId: "",
@@ -212,7 +217,11 @@ const ReservationScreen = () => {
 
       {/* Add/Edit Reservation Dialog */}
       <Portal>
-        <Dialog visible={dialogVisible} onDismiss={closeDialog}>
+        <Dialog
+          visible={dialogVisible}
+          onDismiss={closeDialog}
+          style={styles.dialogContainer}
+        >
           <Dialog.Title>
             {currentReservation ? "Edit Reservation" : "Add Reservation"}
           </Dialog.Title>
@@ -224,18 +233,28 @@ const ReservationScreen = () => {
               keyboardType="numeric"
               style={styles.input}
             />
-            <TextInput
+            {/* <TextInput
               label="Place ID"
               value={placeId}
               onChangeText={setPlaceId}
               keyboardType="numeric"
               style={styles.input}
+            /> */}
+            <Dropdown
+              data={{
+                placeId1: "place 1",
+                placeId2: "place 2",
+                placeId3: "place 3",
+              }}
+              onSelect={setPlaceId} // Pass handleSelect function to handle selection
+              placeholder="Choose a Place"
             />
+
             <Button
               onPress={() =>
                 setDatePickerVisible((prev) => ({ ...prev, start: true }))
               }
-              style={styles.input}
+              style={styles.dialogDate}
             >
               Start Time: {startDateTime.toLocaleString()}
             </Button>
@@ -243,7 +262,7 @@ const ReservationScreen = () => {
               onPress={() =>
                 setDatePickerVisible((prev) => ({ ...prev, end: true }))
               }
-              style={styles.input}
+              style={styles.dialogDate}
             >
               End Time: {endDateTime.toLocaleString()}
             </Button>
@@ -277,32 +296,46 @@ const ReservationScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-  filters: { marginBottom: 16 },
-  listContainer: { paddingBottom: 80 },
-  card: {
-    marginBottom: 16,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    elevation: 4,
-  },
-  itemName: {
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  input: {
-    marginBottom: 12,
-  },
-  datePicker: {
-    marginBottom: 16,
-  },
-  fab: {
-    position: "absolute",
-    right: 16,
-    bottom: 16,
-    backgroundColor: "#6200ee",
-  },
-})
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: theme.colors.elevation.level3,
+    },
+    filters: { marginBottom: 16 },
+    listContainer: { paddingBottom: 80 },
+    card: {
+      marginBottom: 16,
+      // backgroundColor: theme.colors.elevation.level1,
+      borderRadius: 8,
+      elevation: 4,
+    },
+    itemName: {
+      fontWeight: "bold",
+      fontSize: 16,
+    },
+    input: {
+      marginBottom: 12,
+    },
+    datePicker: {
+      marginBottom: 16,
+    },
+    fab: {
+      position: "absolute",
+      right: 16,
+      bottom: 16,
+      backgroundColor: theme.colors.elevation.level1,
+    },
+    dialogDate: {
+      borderWidth: 1,
+      borderColor: theme.colors.secondary,
+      borderStyle: "solid",
+      marginBottom: 10,
+      // backgroundColor: "red",
+    },
+    dialogContainer: { backgroundColor: theme.colors.elevation.level1 },
+  })
+}
 
 export default ReservationScreen

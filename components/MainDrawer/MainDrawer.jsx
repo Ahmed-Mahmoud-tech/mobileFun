@@ -1,13 +1,15 @@
 import * as React from "react"
-import { Drawer } from "react-native-paper"
+import { Drawer, useTheme } from "react-native-paper"
 import { useRouter } from "expo-router"
-import { ScrollView } from "react-native"
+import { ScrollView, StyleSheet } from "react-native"
 
 const MainDrawer = () => {
   const [active, setActive] = React.useState("")
+  const theme = useTheme()
+  const styles = themeStyles(theme)
   const router = useRouter()
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
       <Drawer.Section>
         <Drawer.Item
           label="Login"
@@ -116,6 +118,15 @@ const MainDrawer = () => {
       </Drawer.Section>
     </ScrollView>
   )
+}
+
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      paddingVertical: 10,
+      backgroundColor: theme.colors.elevation.level2,
+    },
+  })
 }
 
 export default MainDrawer

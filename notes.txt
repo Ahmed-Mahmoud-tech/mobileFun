@@ -1,0 +1,2 @@
+remove card
+alert yes or yes and no style

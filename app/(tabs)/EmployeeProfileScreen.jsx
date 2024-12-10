@@ -7,6 +7,7 @@ import {
   Card,
   Chip,
   SegmentedButtons,
+  useTheme,
 } from "react-native-paper"
 import DateTimePicker from "@react-native-community/datetimepicker"
 
@@ -29,6 +30,8 @@ const EmployeeProfileScreen = () => {
   }
 
   const handleEditToggle = () => setEditMode(!editMode)
+  const theme = useTheme()
+  const styles = themeStyles(theme)
 
   const handleSendRequest = () => {
     if (!newOwnerEmail.trim()) {
@@ -93,8 +96,16 @@ const EmployeeProfileScreen = () => {
             value={gender}
             onValueChange={setGender}
             buttons={[
-              { value: "Male", label: "Male" },
-              { value: "Female", label: "Female" },
+              {
+                value: "Male",
+                label: "Male",
+                style: gender === "Male" ? styles.selectedButton : {},
+              },
+              {
+                value: "Female",
+                label: "Female",
+                style: gender === "Female" ? styles.selectedButton : {},
+              },
             ]}
             disabled={!editMode}
             style={styles.segmentedButtons}
@@ -149,23 +160,28 @@ const EmployeeProfileScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: "#f5f5f5",
-  },
-  card: {
-    marginBottom: 16,
-  },
-  input: {
-    marginBottom: 16,
-  },
-  button: {
-    marginTop: 8,
-  },
-  segmentedButtons: {
-    marginBottom: 16,
-  },
-})
-
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: theme.colors.elevation.level3,
+    },
+    card: {
+      marginBottom: 16,
+    },
+    input: {
+      marginBottom: 16,
+    },
+    button: {
+      marginTop: 8,
+    },
+    segmentedButtons: {
+      marginBottom: 16,
+    },
+    selectedButton: {
+      backgroundColor: theme.colors.primaryContainer, // Active color
+    },
+  })
+}
 export default EmployeeProfileScreen

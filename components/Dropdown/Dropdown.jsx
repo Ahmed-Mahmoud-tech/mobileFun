@@ -1,23 +1,24 @@
 import React, { useState } from "react"
 import {
   View,
-  Text,
   TouchableOpacity,
   Modal,
   FlatList,
   StyleSheet,
 } from "react-native"
+import { Text, useTheme } from "react-native-paper"
 
 const Dropdown = ({ data, onSelect, placeholder }) => {
   const [isVisible, setIsVisible] = useState(false) // Controls dropdown visibility
   const [selectedItem, setSelectedItem] = useState(null) // Stores the selected item
-
+  const theme = useTheme()
+  const styles = themeStyles(theme)
   // Function to toggle visibility of the dropdown
   const toggleDropdown = () => setIsVisible(!isVisible)
 
   // Function to handle selection of an item
   const handleSelectItem = (item) => {
-    setSelectedItem(item) // Set the selected item
+    setSelectedItem(data[item]) // Set the selected item
     setIsVisible(false) // Close the dropdown
     if (onSelect) {
       onSelect(item) // Pass the selected item to the parent component
@@ -30,7 +31,7 @@ const Dropdown = ({ data, onSelect, placeholder }) => {
       onPress={() => handleSelectItem(item)}
       style={styles.item}
     >
-      <Text style={styles.itemText}>{item}</Text>
+      <Text style={styles.itemText}>{data[item]}</Text>
     </TouchableOpacity>
   )
 
@@ -56,7 +57,7 @@ const Dropdown = ({ data, onSelect, placeholder }) => {
         >
           <View style={styles.modalContainer}>
             <FlatList
-              data={data}
+              data={Object.keys(data)}
               renderItem={renderItem}
               keyExtractor={(item, index) => index.toString()}
             />
@@ -67,40 +68,43 @@ const Dropdown = ({ data, onSelect, placeholder }) => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 20,
-  },
-  dropdownButton: {
-    padding: 10,
-    backgroundColor: "#6200ee",
-    borderRadius: 0,
-    alignItems: "center",
-    width: "100%",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContainer: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    width: 200,
-    maxHeight: 400,
-    padding: 10,
-  },
-  item: {
-    padding: 10,
-  },
-  itemText: {
-    fontSize: 16,
-  },
-})
-
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      marginBottom: 20,
+    },
+    dropdownButton: {
+      padding: 10,
+      marginTop: 10,
+      backgroundColor: theme.colors.elevation.level3,
+      borderRadius: 0,
+      alignItems: "center",
+      width: "100%",
+    },
+    buttonText: {
+      color: theme.colors.onSurfaceDisabled,
+      fontSize: 16,
+      color: theme.colors.onSurface,
+    },
+    modalOverlay: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: theme.colors.onSurfaceDisabled,
+    },
+    modalContainer: {
+      backgroundColor: theme.colors.background,
+      borderRadius: 10,
+      width: 200,
+      maxHeight: 400,
+      padding: 10,
+    },
+    item: {
+      padding: 10,
+    },
+    itemText: {
+      fontSize: 16,
+    },
+  })
+}
 export default Dropdown

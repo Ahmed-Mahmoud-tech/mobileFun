@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { FlatList, StyleSheet, View, Text } from "react-native"
+import { FlatList, StyleSheet, View } from "react-native"
 import {
   TextInput,
   Button,
@@ -7,6 +7,8 @@ import {
   Portal,
   Card,
   FAB,
+  Text,
+  useTheme,
 } from "react-native-paper"
 
 const PurchaseItemsScreen = () => {
@@ -14,7 +16,8 @@ const PurchaseItemsScreen = () => {
     { id: 1, name: "Item 1", price: 20 },
     { id: 2, name: "Item 2", price: 30 },
   ])
-
+  const theme = useTheme()
+  const styles = themeStyles(theme)
   const [dialogVisible, setDialogVisible] = useState(false)
   const [currentItem, setCurrentItem] = useState(null)
   const [itemName, setItemName] = useState("")
@@ -121,37 +124,38 @@ const PurchaseItemsScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-    paddingBottom: 80,
-  },
-  listContainer: {
-    padding: 20,
-  },
-  card: {
-    marginBottom: 15,
-  },
-  itemName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  input: {
-    marginBottom: 15,
-  },
-  fab: {
-    position: "absolute",
-    right: 16,
-    bottom: 16,
-  },
-  emptyText: {
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 16,
-    color: "#666",
-  },
-})
-
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.elevation.level3,
+      paddingBottom: 80,
+    },
+    listContainer: {
+      padding: 20,
+    },
+    card: {
+      marginBottom: 15,
+    },
+    itemName: {
+      fontSize: 18,
+      fontWeight: "bold",
+      marginBottom: 5,
+    },
+    input: {
+      marginBottom: 15,
+    },
+    fab: {
+      position: "absolute",
+      right: 16,
+      bottom: 16,
+    },
+    emptyText: {
+      textAlign: "center",
+      marginTop: 20,
+      fontSize: 16,
+      color: "#666",
+    },
+  })
+}
 export default PurchaseItemsScreen

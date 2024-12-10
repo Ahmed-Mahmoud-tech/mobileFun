@@ -1,11 +1,5 @@
 import React, { useState } from "react"
-import {
-  FlatList,
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-} from "react-native"
+import { FlatList, StyleSheet, View, TouchableOpacity } from "react-native"
 import {
   TextInput,
   Button,
@@ -14,10 +8,15 @@ import {
   Card,
   FAB,
   SegmentedButtons,
+  useTheme,
+  Text,
 } from "react-native-paper"
 import DateTimePicker from "@react-native-community/datetimepicker"
 
 const PlayersPurchasesScreen = () => {
+  const theme = useTheme()
+  const styles = themeStyles(theme)
+
   const [purchases, setPurchases] = useState([
     {
       id: 1,
@@ -44,10 +43,8 @@ const PlayersPurchasesScreen = () => {
   })
 
   const [isDatePickerVisible, setDatePickerVisible] = useState(false)
-
   const [dialogVisible, setDialogVisible] = useState(false)
   const [currentPurchase, setCurrentPurchase] = useState(null)
-
   const [purchasesItemName, setPurchasesItemName] = useState("")
   const [count, setCount] = useState("")
   const [playerId, setPlayerId] = useState("")
@@ -283,62 +280,63 @@ const PlayersPurchasesScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-    padding: 10,
-  },
-  filters: {
-    flexDirection: "column",
-    padding: 10,
-  },
-  inputRow: {
-    marginBottom: 10,
-  },
-  filterInput: {
-    marginBottom: 10,
-  },
-  datePicker: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    marginBottom: 10,
-    justifyContent: "center",
-  },
-  datePickerText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  listContainer: {
-    paddingBottom: 100,
-  },
-  card: {
-    marginBottom: 10,
-  },
-  itemName: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  resetButton: {
-    marginTop: 10,
-  },
-  input: {
-    marginBottom: 10,
-  },
-  selectedButton: {
-    backgroundColor: "#6200ea", // Active color
-  },
-  fab: {
-    position: "absolute",
-    right: 16,
-    bottom: 16,
-  },
-  emptyText: {
-    textAlign: "center",
-    color: "#aaa",
-    marginTop: 20,
-  },
-})
-
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.elevation.level3,
+      padding: 10,
+    },
+    filters: {
+      flexDirection: "column",
+      padding: 10,
+    },
+    inputRow: {
+      marginBottom: 10,
+    },
+    filterInput: {
+      marginBottom: 10,
+    },
+    datePicker: {
+      padding: 10,
+      borderWidth: 1,
+      borderColor: theme.colors.secondary,
+      borderRadius: 50,
+      marginBottom: 10,
+      justifyContent: "center",
+    },
+    datePickerText: {
+      fontSize: 16,
+      color: theme.colors.secondary,
+    },
+    listContainer: {
+      paddingBottom: 100,
+    },
+    card: {
+      marginBottom: 10,
+    },
+    itemName: {
+      fontSize: 18,
+      fontWeight: "bold",
+    },
+    resetButton: {
+      marginTop: 10,
+    },
+    input: {
+      marginBottom: 10,
+    },
+    selectedButton: {
+      backgroundColor: theme.colors.primaryContainer, // Active color
+    },
+    fab: {
+      position: "absolute",
+      right: 16,
+      bottom: 16,
+    },
+    emptyText: {
+      textAlign: "center",
+      marginTop: 20,
+    },
+  })
+}
 export default PlayersPurchasesScreen

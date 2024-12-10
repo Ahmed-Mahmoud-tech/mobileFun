@@ -1,9 +1,12 @@
 import React, { useState } from "react"
-import { Appbar, Badge, Text } from "react-native-paper"
+import { Appbar, Badge, Text, useTheme } from "react-native-paper"
 import { useDispatch, useSelector } from "react-redux"
 import { ChangeMenuStatus } from "@/store/slices/mainConfig"
 import { StyleSheet, View } from "react-native"
 const Header = () => {
+  const theme = useTheme()
+  const styles = themeStyles(theme)
+
   const menuStatus = useSelector((state) => state.mainConfig.menuStatus)
   const dispatch = useDispatch()
   const menuChange = () => {
@@ -16,7 +19,7 @@ const Header = () => {
   const [notificationCount, setNotificationCount] = useState(3) // Example notification count
 
   return (
-    <Appbar.Header>
+    <Appbar.Header style={styles.container}>
       <Appbar.Content title="Title" />
       <Appbar.Content title="hamada" />
       <View>
@@ -33,12 +36,18 @@ const Header = () => {
 }
 
 export default Header
-const styles = StyleSheet.create({
-  badge: {
-    position: "absolute",
-    top: 9,
-    right: 9,
-    backgroundColor: "red",
-    color: "white",
-  },
-})
+
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      backgroundColor: theme.colors.elevation.level1,
+    },
+    badge: {
+      position: "absolute",
+      top: 9,
+      right: 9,
+      backgroundColor: "red",
+      color: "white",
+    },
+  })
+}

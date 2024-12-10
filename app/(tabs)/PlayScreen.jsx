@@ -1,12 +1,5 @@
 import React, { useState } from "react"
-import {
-  StyleSheet,
-  View,
-  FlatList,
-  Alert,
-  Text,
-  ScrollView,
-} from "react-native"
+import { StyleSheet, View, FlatList, Alert, ScrollView } from "react-native"
 import {
   TextInput,
   Button,
@@ -15,6 +8,8 @@ import {
   Card,
   FAB,
   SegmentedButtons,
+  useTheme,
+  Text,
 } from "react-native-paper"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import Dropdown from "@/components/Dropdown/Dropdown"
@@ -22,15 +17,16 @@ import Dropdown from "@/components/Dropdown/Dropdown"
 const PlaysScreen = () => {
   const [plays, setPlays] = useState([])
   const [filters, setFilters] = useState({
-    playType: "all",
-    status: "all",
+    playType: "All",
+    status: "All",
     startDate: new Date(),
     playersId: "",
   })
 
   const [dialogVisible, setDialogVisible] = useState(false)
   const [currentPlay, setCurrentPlay] = useState(null)
-
+  const theme = useTheme()
+  const styles = themeStyles(theme)
   const [game, setGame] = useState("")
   const [playType, setPlayType] = useState("Single")
   const [placeId, setPlaceId] = useState("")
@@ -39,7 +35,7 @@ const PlaysScreen = () => {
     new Date(new Date().getTime() + 3600000)
   )
   const [playersId, setPlayersId] = useState("")
-  const [status, setStatus] = useState("not paid")
+  const [status, setStatus] = useState("Not Paid")
 
   const [datePickerType, setDatePickerType] = useState(null)
 
@@ -67,7 +63,7 @@ const PlaysScreen = () => {
     setStartTime(new Date())
     setEndTime(new Date(new Date().getTime() + 3600000))
     setPlayersId("")
-    setStatus("not paid")
+    setStatus("Not Paid")
   }
 
   // Close Dialog
@@ -144,9 +140,9 @@ const PlaysScreen = () => {
   const applyFilters = () => {
     return plays.filter((play) => {
       const matchesPlayType =
-        filters.playType === "all" || play.playType === filters.playType
+        filters.playType === "All" || play.playType === filters.playType
       const matchesStatus =
-        filters.status === "all" || play.status === filters.status
+        filters.status === "All" || play.status === filters.status
       const matchesStartDate =
         filters.startDate.toDateString() ===
         new Date(play.startTime).toDateString()
@@ -201,38 +197,67 @@ const PlaysScreen = () => {
   const renderHeader = () => (
     <>
       {/* Filters */}
+
+      <TextInput
+        label="Player ID"
+        value={filters.playersId}
+        onChangeText={(value) =>
+          setFilters((prev) => ({ ...prev, playersId: value }))
+        }
+        keyboardType="numeric"
+        style={styles.input}
+      />
+
       <View style={styles.filters}>
         <SegmentedButtons
           value={filters.playType}
+          style={styles.input}
           onValueChange={(value) =>
             setFilters((prev) => ({ ...prev, playType: value }))
           }
           buttons={[
-            { value: "Single", label: "Single" },
-            { value: "Multi", label: "Multi" },
-            { value: "all", label: "All" },
+            {
+              value: "Single",
+              label: "Single",
+              style: filters.playType === "Single" ? styles.selectedButton : {},
+            },
+            {
+              value: "Multi",
+              label: "Multi",
+              style: filters.playType === "Multi" ? styles.selectedButton : {},
+            },
+            {
+              value: "All",
+              label: "All",
+              style: filters.playType === "All" ? styles.selectedButton : {},
+            },
           ]}
         />
         <SegmentedButtons
           value={filters.status}
+          style={styles.input}
           onValueChange={(value) =>
             setFilters((prev) => ({ ...prev, status: value }))
           }
           buttons={[
-            { value: "payed", label: "Paid" },
-            { value: "not paid", label: "Not Paid" },
-            { value: "all", label: "All" },
+            {
+              value: "payed",
+              label: "Paid",
+              style: filters.status === "payed" ? styles.selectedButton : {},
+            },
+            {
+              value: "Not Paid",
+              label: "Not Paid",
+              style: filters.status === "Not Paid" ? styles.selectedButton : {},
+            },
+            {
+              value: "All",
+              label: "All",
+              style: filters.status === "All" ? styles.selectedButton : {},
+            },
           ]}
         />
-        <TextInput
-          label="Player ID"
-          value={filters.playersId}
-          onChangeText={(value) =>
-            setFilters((prev) => ({ ...prev, playersId: value }))
-          }
-          keyboardType="numeric"
-          style={styles.input}
-        />
+
         <Button
           mode="outlined"
           onPress={() => showDatePicker("startDate")}
@@ -271,37 +296,50 @@ const PlaysScreen = () => {
 
       {/* Add Play Dialog */}
       <Portal>
-        <Dialog visible={dialogVisible} onDismiss={closeDialog}>
+        <Dialog
+          visible={dialogVisible}
+          onDismiss={closeDialog}
+          style={styles.dialogContainer}
+        >
           <Dialog.Title>{currentPlay ? "Edit Play" : "Add Play"}</Dialog.Title>
           <Dialog.Content>
-            {/* <TextInput
-              label="Game"
-              value={game}
-              onChangeText={setGame}
-              style={styles.input}
-            /> */}
             <Dropdown
-              data={["Option 1", "Option 2", "Option 3"]}
+              data={{
+                option1: "Option 1",
+                option2: "Option 2",
+                option3: "Option 3",
+              }}
               onSelect={setGame} // Pass handleSelect function to handle selection
               placeholder="Choose a Game"
+              style={styles.input}
             />
-            <Text>{game}</Text>
             <SegmentedButtons
               value={playType}
               onValueChange={setPlayType}
               buttons={[
-                { value: "Single", label: "Single" },
-                { value: "Multi", label: "Multi" },
+                {
+                  value: "Single",
+                  label: "Single",
+                  style: playType === "Single" ? styles.selectedButton : {},
+                },
+                {
+                  value: "Multi",
+                  label: "Multi",
+                  style: playType === "Multi" ? styles.selectedButton : {},
+                },
               ]}
               style={styles.input}
             />
-            <TextInput
-              label="Place ID"
-              value={placeId}
-              onChangeText={setPlaceId}
-              keyboardType="numeric"
-              style={styles.input}
+            <Dropdown
+              data={{
+                placeId1: "place 1",
+                placeId2: "place 2",
+                placeId3: "place 3",
+              }}
+              onSelect={setPlaceId} // Pass handleSelect function to handle selection
+              placeholder="Choose a Place"
             />
+
             <Button
               mode="outlined"
               onPress={() => showDatePicker("startTime")}
@@ -327,8 +365,16 @@ const PlaysScreen = () => {
               value={status}
               onValueChange={setStatus}
               buttons={[
-                { value: "payed", label: "Paid" },
-                { value: "not paid", label: "Not Paid" },
+                {
+                  value: "Paid",
+                  label: "Paid",
+                  style: status === "Paid" ? styles.selectedButton : {},
+                },
+                {
+                  value: "Not Paid",
+                  label: "Not Paid",
+                  style: status === "Not Paid" ? styles.selectedButton : {},
+                },
               ]}
               style={styles.input}
             />
@@ -346,32 +392,44 @@ const PlaysScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-  filters: { marginBottom: 16 },
-  listContainer: { paddingBottom: 80 },
-  card: {
-    marginBottom: 16,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    elevation: 4,
-  },
-  itemName: {
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  input: {
-    marginBottom: 12,
-  },
-  datePicker: {
-    marginBottom: 16,
-  },
-  fab: {
-    position: "absolute",
-    right: 16,
-    bottom: 16,
-    backgroundColor: "#6200ee",
-  },
-})
-
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: theme.colors.elevation.level3,
+    },
+    filters: { marginBottom: 16 },
+    listContainer: { paddingBottom: 80 },
+    card: {
+      marginBottom: 16,
+      // backgroundColor: theme.colors.elevation.level3,
+      borderRadius: 8,
+      elevation: 4,
+    },
+    itemName: {
+      fontWeight: "bold",
+      fontSize: 16,
+    },
+    input: {
+      marginBottom: 12,
+    },
+    datePicker: {
+      marginBottom: 16,
+    },
+    fab: {
+      position: "absolute",
+      right: 16,
+      bottom: 16,
+      backgroundColor: theme.colors.elevation.level1,
+    },
+    selectedButton: {
+      backgroundColor: theme.colors.primaryContainer, // Active color
+    },
+    FilterSegmentedButtons: {
+      paddingBottom: 100,
+    },
+    dialogContainer: { backgroundColor: theme.colors.elevation.level1 },
+  })
+}
 export default PlaysScreen

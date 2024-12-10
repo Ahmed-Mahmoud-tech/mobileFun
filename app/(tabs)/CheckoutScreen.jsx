@@ -1,25 +1,22 @@
 import React, { useState, useEffect } from "react"
-import {
-  StyleSheet,
-  View,
-  FlatList,
-  Alert,
-  Text,
-  ScrollView,
-} from "react-native"
+import { StyleSheet, View, FlatList, Alert } from "react-native"
 import {
   TextInput,
   Button,
+  Text,
   Card,
   FAB,
   SegmentedButtons,
+  useTheme,
 } from "react-native-paper"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 
 const CheckoutScreen = () => {
+  const theme = useTheme()
+  const styles = themeStyles(theme)
   const [plays, setPlays] = useState([])
   const [filters, setFilters] = useState({
-    status: "all",
+    status: "All",
     playersId: "",
     day: new Date(),
   })
@@ -57,7 +54,7 @@ const CheckoutScreen = () => {
   const applyFilters = () => {
     return plays.filter((play) => {
       const matchesStatus =
-        filters.status === "all" || play.status === filters.status
+        filters.status === "All" || play.status === filters.status
       const matchesPlayerId =
         !filters.playersId || play.playersId.toString() === filters.playersId
       const matchesDay =
@@ -128,17 +125,6 @@ const CheckoutScreen = () => {
 
   const renderHeader = () => (
     <View style={styles.filters}>
-      <SegmentedButtons
-        value={filters.status}
-        onValueChange={(value) =>
-          setFilters((prev) => ({ ...prev, status: value }))
-        }
-        buttons={[
-          { value: "payed", label: "Paid" },
-          { value: "not paid", label: "Not Paid" },
-          { value: "all", label: "All" },
-        ]}
-      />
       <TextInput
         label="Player ID"
         value={filters.playersId}
@@ -148,6 +134,32 @@ const CheckoutScreen = () => {
         keyboardType="numeric"
         style={styles.input}
       />
+
+      <SegmentedButtons
+        value={filters.status}
+        onValueChange={(value) =>
+          setFilters((prev) => ({ ...prev, status: value }))
+        }
+        buttons={[
+          {
+            value: "Paid",
+            label: "Paid",
+            style: filters.status === "Paid" ? styles.selectedButton : {},
+          },
+          {
+            value: "Not Paid",
+            label: "Not Paid",
+            style: filters.status === "Not Paid" ? styles.selectedButton : {},
+          },
+          {
+            value: "All",
+            label: "All",
+            style: filters.status === "All" ? styles.selectedButton : {},
+          },
+        ]}
+        style={styles.segmentedButtons}
+      />
+
       <Button
         mode="outlined"
         onPress={showDatePicker}
@@ -194,36 +206,46 @@ const CheckoutScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-  filters: { marginBottom: 16 },
-  listContainer: { paddingBottom: 80 },
-  card: {
-    marginBottom: 16,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    elevation: 4,
-  },
-  itemName: {
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  input: {
-    marginBottom: 12,
-  },
-  datePicker: {
-    marginBottom: 16,
-  },
-  emptyText: {
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 16,
-    color: "#888",
-  },
-  checkoutAll: {
-    marginTop: 16,
-    padding: 10,
-  },
-})
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: theme.colors.elevation.level3,
+    },
+    filters: { marginBottom: 16 },
+    listContainer: { paddingBottom: 80 },
+    card: {
+      marginBottom: 16,
+      borderRadius: 8,
+      elevation: 4,
+    },
+    itemName: {
+      fontWeight: "bold",
+      fontSize: 16,
+    },
+    input: {
+      marginBottom: 12,
+    },
+    datePicker: {
+      marginBottom: 16,
+    },
+    emptyText: {
+      textAlign: "center",
+      marginTop: 20,
+      fontSize: 16,
+    },
+    checkoutAll: {
+      marginTop: 16,
+      padding: 10,
+    },
+    segmentedButtons: {
+      marginBottom: 16,
+    },
+    selectedButton: {
+      backgroundColor: theme.colors.primaryContainer, // Active color
+    },
+  })
+}
 
 export default CheckoutScreen

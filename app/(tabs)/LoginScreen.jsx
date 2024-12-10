@@ -1,5 +1,6 @@
 import React, { useState } from "react"
-import { StyleSheet, View } from "react-native"
+import { StyleSheet, ScrollView, View } from "react-native"
+import { Colors } from "@/constants/Colors"
 import {
   TextInput,
   Button,
@@ -15,8 +16,8 @@ const LoginScreen = ({ onLogin }) => {
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-
   const theme = useTheme()
+  const styles = themeStyles(theme)
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -60,7 +61,11 @@ const LoginScreen = ({ onLogin }) => {
             autoCapitalize="none"
             autoCorrect={false}
             error={!!error}
-            theme={{ colors: { error: theme.colors.error } }}
+            theme={{
+              colors: {
+                error: theme.error,
+              },
+            }}
           />
           <HelperText type="error" visible={!!error}>
             {error}
@@ -91,35 +96,37 @@ const LoginScreen = ({ onLogin }) => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f5f5f5",
-    padding: 20,
-  },
-  card: {
-    width: "100%",
-    padding: 10,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 16,
-    marginBottom: 20,
-    textAlign: "center",
-    color: "gray",
-  },
-  input: {
-    marginBottom: 15,
-  },
-  button: {
-    marginTop: 10,
-  },
-})
+function themeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: theme.colors.elevation.level3,
+      padding: 20,
+    },
+    card: {
+      width: "100%",
+      padding: 10,
+    },
+    title: {
+      fontSize: 24,
+      marginBottom: 10,
+      textAlign: "center",
+    },
+    subtitle: {
+      fontSize: 16,
+      marginBottom: 20,
+      textAlign: "center",
+      color: "gray",
+    },
+    input: {
+      marginBottom: 15,
+    },
+    button: {
+      marginTop: 10,
+    },
+  })
+}
 
 export default LoginScreen
